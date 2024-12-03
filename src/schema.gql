@@ -1,0 +1,61 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Activo {
+  codigo: String!
+  codadi: String!
+  empresa: String!
+  periodo: String!
+  descrip: String!
+  marca: String!
+  modelo: String!
+  dimension: String!
+  color: String!
+  fecfabrica: DateTime!
+  nserie: String!
+  ruc: String!
+  localizacion: String!
+  ubica: String!
+  responsa: String!
+  estado: String!
+  foto: String!
+  cantlote: Int!
+  codlote: String!
+  motor: String!
+  chasis: String!
+  placa: String!
+  afmenor: Int!
+  proyecto: String!
+  negocio: String!
+  familia: String!
+  subfamilia: String!
+  foto2: String!
+  foto3: String!
+  compopadre: Boolean!
+  codcompo: String!
+  operativo: Boolean!
+  cdo_tablet: String!
+  conciliado: Int!
+  fec_concil: DateTime!
+  hor_concil: String!
+  usr_concil: String!
+  codbarra: String!
+  fotoactualizado: String!
+  foto2actualizado: String!
+  foto3actualizado: String!
+  observa: String!
+  activo: String!
+  fechacreacion: DateTime!
+  fechamodificacion: DateTime
+  cuenta: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  activos: [Activo!]!
+}
