@@ -3,4 +3,7 @@ export class MaestroQueryDto {
   estado?: string;
   proyecto?: string;
   familia?: string;
+  empresa?: string;
+  periodo?: string;
+  limit?: number;
 }

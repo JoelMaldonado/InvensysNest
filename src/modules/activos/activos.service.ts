@@ -39,7 +39,19 @@ export class ActivosService {
       qb.andWhere('activo.familia = :familia', { familia: query.familia });
     }
 
-    const list = await qb.take(500).getMany();
+    if (query?.empresa) {
+      qb.andWhere('activo.empresa = :empresa', { empresa: query.empresa });
+    }
+
+    if (query?.periodo) {
+      qb.andWhere('activo.periodo = :periodo', { periodo: query.periodo });
+    }
+
+    if( query?.limit) {
+      qb.limit(query.limit);
+    }
+
+    const list = await qb.getMany();
 
     const listMap = list.map((item) => {
       return toDomain(item);

@@ -1,5 +1,5 @@
 import { ActivoInv } from 'src/modules/activos/entities/activo.inv.entity';
-import { Activo } from 'src/graph/activo/dto/activo.entity';
+import { Activo } from 'src/graph/activo/entities/activo.entity';
 
 export function toDomain(activo: ActivoInv): Activo {
   const opera = activo.operativo2 === 0 ? activo.operativo === 1 : true;
@@ -25,7 +25,7 @@ export function toDomain(activo: ActivoInv): Activo {
     estado: activo.estado2.trim() || activo.estado.trim() || '',
     foto: activo.foto.trim() || '',
     cantlote: activo.cantlote2 || activo.cantlote || 0,
-    codlote: activo.codlote2.trim() || activo.codlote.trim() || '',
+    codlote: activo.codlote2 || activo.codlote || '',
     motor: activo.motor2.trim() || activo.motor.trim() || '',
     chasis: activo.chasis2.trim() || activo.chasis.trim() || '',
     placa: activo.placa2.trim() || activo.placa.trim() || '',
@@ -52,7 +52,7 @@ export function toDomain(activo: ActivoInv): Activo {
     activo: activo.activo.trim() || '',
     fechacreacion: activo.fechacreacion,
     fechamodificacion: activo.fechamodificacion,
-    cuenta: activo.cuenta.trim() || '',
+    cuenta: activo.cuenta || '',
   };
 
   return model;
