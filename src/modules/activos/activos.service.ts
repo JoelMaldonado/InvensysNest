@@ -1,24 +1,61 @@
-import { Injectable } from '@nestjs/common';
-import { CreateActivoDto } from './dto/create-activo.dto';
-import { UpdateActivoDto } from './dto/update-activo.dto';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ActivoInv } from './entities/activo.inv.entity';
-import { Repository } from 'typeorm';
-import { MaestroQueryDto } from './dto/maestro-query.dto';
+import { Like, Repository } from 'typeorm';
 import { toDomain } from 'src/domain/mappers/activo.inv.mapper';
+import { QueryActivoDto } from './dto/query-activo.dto';
+import { Validabarra } from './entities/validabarra.entity';
 
 @Injectable()
 export class ActivosService {
   constructor(
     @InjectRepository(ActivoInv)
     private readonly repo: Repository<ActivoInv>,
+
+    @InjectRepository(Validabarra)
+    private readonly repoValidaBarra: Repository<Validabarra>,
   ) {}
 
-  create(createActivoDto: CreateActivoDto) {
-    return 'This action adds a new activo';
+  async findAllBarra(empresa: string, periodo: string, codBarra: string) {
+    const listValidaBarra = await this.repoValidaBarra.find({
+      where: { 
+        empresa,
+        palabra: Like(`%${codBarra}%`)
+      },
+    });
+
+    if (listValidaBarra.length > 0) {
+      return {
+        isSuccess: true,
+        message: 'Palabra encontrada',
+        data: [],
+      };
+    } else {
+      const inv = await this.repo.findOne({
+        where: {
+          empresa,
+          periodo,
+          codbarra: codBarra
+        },
+      });
+
+      if (inv) {
+        return {
+          isSuccess: false,
+          message: `decirle : este código de barra(${codBarra}) ya esta en uso en el item (${inv.descrip.trim()})`,
+          data: []
+        };
+      } else {
+        return {
+          isSuccess: true,
+          message: 'Código de barra disponible',
+          data: []
+        };
+      }
+    }
   }
 
-  async findAll(query?: MaestroQueryDto) {
+  async findAll(query?: QueryActivoDto) {
     const qb = this.repo.createQueryBuilder('activo');
 
     if (query?.ubicacion) {
@@ -47,27 +84,28 @@ export class ActivosService {
       qb.andWhere('activo.periodo = :periodo', { periodo: query.periodo });
     }
 
-    if( query?.limit) {
+    if (query?.limit) {
       qb.limit(query.limit);
     }
 
-    const list = await qb.getMany();
+    if (query?.codBarra) {
+      const listValidaBarra = await this.repoValidaBarra.find({
+        where: {
+          palabra: Like(`%${query.codBarra}%`),
+        },
+      });
+      if (listValidaBarra.length === 0) {
+        qb.andWhere('activo.codBarra = :codBarra', {
+          codBarra: query.codBarra,
+        });
+      }
+    }
 
-    const listMap = list.map((item) => {
-      return toDomain(item);
-    });
-    return listMap;
+    const list = await qb.getMany();
+    return list.map((item) => toDomain(item));
   }
 
   findOne(id: number) {
     return `This action returns a #${id} activo`;
-  }
-
-  update(id: number, updateActivoDto: UpdateActivoDto) {
-    return `This action updates a #${id} activo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} activo`;
   }
 }

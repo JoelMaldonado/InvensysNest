@@ -1,9 +1,10 @@
-export class MaestroQueryDto {
+export class QueryActivoDto {
   ubicacion?: string;
   estado?: string;
   proyecto?: string;
   familia?: string;
   empresa?: string;
   periodo?: string;
-  limit?: number;
+  limit?: number = 100;
+  codBarra?: string;
 }

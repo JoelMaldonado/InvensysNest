@@ -1,32 +1,23 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ActivosService } from './activos.service';
-import { CreateActivoDto } from './dto/create-activo.dto';
-import { UpdateActivoDto } from './dto/update-activo.dto';
-import { MaestroQueryDto } from './dto/maestro-query.dto';
+import { QueryActivoDto } from './dto/query-activo.dto';
 
 @Controller('activos')
 export class ActivosController {
   constructor(private readonly activosService: ActivosService) {}
 
-  @Post()
-  create(@Body() createActivoDto: CreateActivoDto) {
-    return this.activosService.create(createActivoDto);
+  @Get()
+  async findAll(@Query() query: QueryActivoDto) {
+    return await this.activosService.findAll(query);
   }
 
-  @Get()
-  findAll(
-    @Query() query: MaestroQueryDto,
+  @Get('findCodBarra')
+  async findAllBarra(
+    @Query('empresa') empresa: string,
+    @Query('periodo') periodo: string,
+    @Query('codBarra') codBarra: string,
   ) {
-    return this.activosService.findAll(query);
+    return await this.activosService.findAllBarra(empresa, periodo, codBarra);
   }
 
   @Get(':id')
@@ -34,13 +25,4 @@ export class ActivosController {
     return this.activosService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActivoDto: UpdateActivoDto) {
-    return this.activosService.update(+id, updateActivoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.activosService.remove(+id);
-  }
 }
