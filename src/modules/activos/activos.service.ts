@@ -41,7 +41,7 @@ export class ActivosService {
       if (inv) {
         return {
           isSuccess: false,
-          message: `Este código de barra(${codBarra}) ya esta en uso en el item (${inv.descrip.trim()})`
+          message: `Este código de barra: ${codBarra} ya esta en uso en el item: ${inv.descrip.trim().toUpperCase()}`
         };
       } else {
         return {
