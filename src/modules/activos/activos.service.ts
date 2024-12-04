@@ -27,8 +27,7 @@ export class ActivosService {
     if (listValidaBarra.length > 0) {
       return {
         isSuccess: true,
-        message: 'Palabra encontrada',
-        data: [],
+        message: 'Palabra encontrada'
       };
     } else {
       const inv = await this.repo.findOne({
@@ -42,14 +41,12 @@ export class ActivosService {
       if (inv) {
         return {
           isSuccess: false,
-          message: `decirle : este código de barra(${codBarra}) ya esta en uso en el item (${inv.descrip.trim()})`,
-          data: []
+          message: `Este código de barra(${codBarra}) ya esta en uso en el item (${inv.descrip.trim()})`
         };
       } else {
         return {
           isSuccess: true,
-          message: 'Código de barra disponible',
-          data: []
+          message: 'Código de barra disponible'
         };
       }
     }
